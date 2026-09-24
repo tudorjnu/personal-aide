@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "skills": {
+    "brainstorm": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/brainstorm/SKILL.md",
+      "computedHash": "f68715673e300ca9b7e4b704be80051799aab3d12bbd8eea90629b85c860925f"
+    },
+    "code-review": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/code-review/SKILL.md",
+      "computedHash": "3e43621cf3d3285fd573b65c89d60ced4dbdc1e7d461c52b6fc2690a48ba1a6f"
+    },
+    "domain-modeling": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/domain-modeling/SKILL.md",
+      "computedHash": "2a50170e14b87328c83a3bdd9f645af4853d6cfaa4c1460123c0f04998f9fa55"
+    },
+    "git-commit": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/tools/git-commit/SKILL.md",
+      "computedHash": "9d41bc7edda4d6a62b9430695a37b3e984ea065c00ee445806f7ab8d031e6c6e"
+    },
+    "grill-me": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "computedHash": "9cdbb4b8f7a3aeaef82e6230c9e823500d4a8a1214c726cf342cf9829d34fc7d"
+    },
+    "grill-with-domain": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/grill-with-domain/SKILL.md",
+      "computedHash": "a64bc56974a5819d14636807239b11eda72e6aaa2460f4d9a2eadcebb12adf0b"
+    },
+    "grilling": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grilling/SKILL.md",
+      "computedHash": "d4e4ce3e1b7461c3e6cbc47825724824180697fb7c00e02e775f6d14696e306a"
+    },
+    "handoff": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/helpers/handoff/SKILL.md",
+      "computedHash": "20e5f4afdef502637510bc5c64d27645d3c85c88df9cb006824bbb0980166319"
+    },
+    "implement": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/implement/SKILL.md",
+      "computedHash": "1bf7930d0425136a13cef1c1aeff99a8b24bf199c7b7ea5f7d50ac14a92bfccb"
+    },
+    "init": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/init/SKILL.md",
+      "computedHash": "14dbb18bfa7c57c7889ab3c20b74eba07d4766ca73bf70dd15acd3e32566e09c"
+    },
+    "prototype": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/prototype/SKILL.md",
+      "computedHash": "ac2798f3350dfd65c120368bfbd1280f4a3f8224752ae405724baec129d8abbe"
+    },
+    "setup-engineering-skills": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/setup-engineering-skills/SKILL.md",
+      "computedHash": "ecc8a3b9d526aae75429ecd233e90c024dbdfeb5fdb7d7ca497ba4f096dabd96"
+    },
+    "to-spec": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/to-spec/SKILL.md",
+      "computedHash": "fb7e481ce6205297bea788ec8337450f999a810cf016bc46849b12208e833a11"
+    },
+    "to-tickets": {
+      "source": "tudorjnu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/to-tickets/SKILL.md",
+      "computedHash": "7aa726631d997d968c4a08e50b9c219ece7b4a6af5047f182f3c9c9605a8fb14"
+    }
+  }
+}
