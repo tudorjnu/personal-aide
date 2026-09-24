@@ -1,0 +1,5 @@
+interface:
+  display_name: "Git Commit"
+  short_description: "Create conventional commits from diffs"
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Init"
+  short_description: "Prepare a repo for engineering work"
+policy:
+  allow_implicit_invocation: false
