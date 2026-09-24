@@ -27,12 +27,15 @@ function esc(value: string): string {
     .replaceAll("'", "&#39;");
 }
 
-function page(title: string, body: string): string {
+function page(title: string, body: string, showHeader = true): string {
+  const header = showHeader
+    ? `<header><a href="/">Reading List</a></header>`
+    : "";
   return `<!doctype html>
 <html>
 <head><meta charset="utf-8"><title>${esc(title)}</title>
 <style>${STYLE}</style></head>
-<body><header><a href="/">Reading List</a></header>${body}</body>
+<body>${header}${body}</body>
 </html>`;
 }
 
@@ -63,6 +66,10 @@ export function createApp(dbPath: string): Server {
   function redirect(res: ServerResponse, location: string): void {
     res.writeHead(303, { location });
     res.end();
+  }
+
+  function notFound(res: ServerResponse): void {
+    html(res, 404, page("Not found", "<h1>404</h1>"));
   }
 
   const routes: Route[] = [
@@ -123,6 +130,14 @@ export function createApp(dbPath: string): Server {
                     class="inline"><button>${label}</button></form></li>`;
           })
           .join("");
+        const share = store.getShareByList(record.id);
+        const shareSection =
+          share && new Date(share.expires_at) > new Date()
+            ? `<p>Share link: <a href="/shared/${esc(share.token)}">/shared/${esc(share.token)}</a><br>
+               Expires ${new Date(share.expires_at).toLocaleDateString()}</p>`
+            : `<form method="post" action="/lists/${record.id}/share" class="inline">
+                 <button>Share</button>
+               </form>`;
         html(
           res,
           200,
@@ -134,7 +149,9 @@ export function createApp(dbPath: string): Server {
                <input type="text" name="title" placeholder="Article title">
                <input type="text" name="url" placeholder="Link, optional">
                <button>Add</button>
-             </form>`,
+             </form>
+             <h2>Sharing</h2>
+             ${shareSection}`,
           ),
         );
       },
@@ -150,6 +167,54 @@ export function createApp(dbPath: string): Server {
           store.addItem(params.id, title, url);
         }
         redirect(res, `/lists/${params.id}`);
+      },
+    },
+    {
+      method: "POST",
+      pattern: /^\/lists\/(?<id>\w+)\/share$/,
+      handler: async (_req, res, params) => {
+        if (!store.getList(params.id)) {
+          notFound(res);
+          return;
+        }
+        store.addShare(params.id);
+        redirect(res, `/lists/${params.id}`);
+      },
+    },
+    {
+      method: "GET",
+      pattern: /^\/shared\/(?<token>\w+)$/,
+      handler: async (_req, res, params) => {
+        const share = store.getShareByToken(params.token);
+        if (!share || new Date(share.expires_at) <= new Date()) {
+          notFound(res);
+          return;
+        }
+        const list = store.getList(share.list_id);
+        if (!list) {
+          notFound(res);
+          return;
+        }
+        const rows = store
+          .items(list.id)
+          .map((item) => {
+            const css = item.read ? "read" : "";
+            const title = item.url
+              ? `<a href="${esc(item.url)}">${esc(item.title)}</a>`
+              : esc(item.title);
+            return `<li class="${css}">${title}</li>`;
+          })
+          .join("");
+        html(
+          res,
+          200,
+          page(
+            list.title,
+            `<h1>${esc(list.title)}</h1>
+             <ul>${rows || "<li>Nothing saved yet.</li>"}</ul>`,
+            false,
+          ),
+        );
       },
     },
     {
@@ -190,6 +255,6 @@ export function createApp(dbPath: string): Server {
       }
       return;
     }
-    html(res, 404, page("Not found", "<h1>404</h1>"));
+    notFound(res);
   });
 }

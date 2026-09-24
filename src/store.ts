@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
 
 export interface ListRow {
@@ -15,7 +15,15 @@ export interface ItemRow {
   read: number;
 }
 
+export interface ShareRow {
+  token: string;
+  list_id: string;
+  created_at: string;
+  expires_at: string;
+}
+
 const SCHEMA = `
+PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS lists (
   id         TEXT PRIMARY KEY,
   title      TEXT NOT NULL,
@@ -27,6 +35,13 @@ CREATE TABLE IF NOT EXISTS items (
   title   TEXT NOT NULL,
   url     TEXT,
   read    INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS shares (
+  token      TEXT PRIMARY KEY,
+  list_id    TEXT NOT NULL REFERENCES lists(id) ON DELETE CASCADE,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  expires_at TEXT NOT NULL,
+  UNIQUE(list_id)
 );
 `;
 
@@ -93,5 +108,44 @@ export class Store {
       .prepare("UPDATE items SET read = ? WHERE id = ?")
       .run(Number(read), id);
     return result.changes > 0 ? this.getItem(id) : undefined;
+  }
+
+  // -- shares ---------------------------------------------------------
+
+  getShareByList(listId: string): ShareRow | undefined {
+    return this.#db
+      .prepare("SELECT * FROM shares WHERE list_id = ?")
+      .get(listId) as ShareRow | undefined;
+  }
+
+  getShareByToken(token: string): ShareRow | undefined {
+    return this.#db
+      .prepare("SELECT * FROM shares WHERE token = ?")
+      .get(token) as ShareRow | undefined;
+  }
+
+  addShare(listId: string): ShareRow | undefined {
+    if (!this.getList(listId)) return undefined;
+
+    const existing = this.getShareByList(listId);
+    if (existing && new Date(existing.expires_at) > new Date()) {
+      return existing;
+    }
+
+    const token = randomBytes(16).toString("hex");
+    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    this.#db
+      .prepare(
+        "INSERT OR REPLACE INTO shares (token, list_id, expires_at) VALUES (?, ?, ?)",
+      )
+      .run(token, listId, expiresAt);
+    return this.getShareByList(listId);
+  }
+
+  // -- deletion --------------------------------------------------------
+
+  deleteList(id: string): boolean {
+    const result = this.#db.prepare("DELETE FROM lists WHERE id = ?").run(id);
+    return result.changes > 0;
   }
 }
